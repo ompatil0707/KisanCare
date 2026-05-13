@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Disease Prediction - KisanCare{% endblock %}
+
+{% block content %}
+<div class="prediction-page">
+    <div class="container">
+        <h1>{{ trans.get('predict_disease', 'Predict Crop Disease') }}</h1>
+        
+        <div class="prediction-content">
+            <div class="upload-section">
+                <h2>{{ trans.get('upload_image', 'Upload Leaf Image') }}</h2>
+                <form id="predictionForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="cropSelect">{{ trans.get('select_crop', 'Select Crop:') }}</label>
+                        <select id="cropSelect" name="category" required>
+                            <option value="">-- {{ trans.get('select_crop', 'Select Crop') }} --</option>
+                            <option value="banana">{{ trans.get('banana', 'Banana') }}</option>
+                            <option value="corn">{{ trans.get('corn', 'Corn') }}</option>
+                            <option value="cotton">{{ trans.get('cotton', 'Cotton') }}</option>
+                            <option value="rice">{{ trans.get('rice', 'Rice') }}</option>
+                            <option value="wheat">{{ trans.get('wheat', 'Wheat') }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imageInput">{{ trans.get('upload_image', 'Upload Leaf Image:') }}</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="imageInput" name="file" accept="image/*" required>
+                            <label for="imageInput" class="file-label">
+                                📁 {{ trans.get('click_or_drag', 'Click or drag image here') }}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="imagePreview" class="image-preview" style="display: none;">
+                        <img id="previewImg" src="" alt="Preview">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">
+                        {{ trans.get('predict', 'Predict Disease') }}
+                    </button>
+                </form>
+            </div>
+            
+            {% if label %}
+            <div class="result-section">
+                <h2>{{ trans.get('prediction_result', 'Prediction Result') }}</h2>
+                <div class="result-card">
+                    <div class="result-item">
+                        <label>{{ trans.get('crop', 'Crop:') }}</label>
+                        <span class="result-value">{{ category }}</span>
+                    </div>
+                    <div class="result-item">
+                        <label>{{ trans.get('disease', 'Disease:') }}</label>
+                        <span class="result-value disease-name">{{ label }}</span>
+                    </div>
+                    <div class="result-item">
+                        <label>{{ trans.get('confidence', 'Confidence:') }}</label>
+                        <span class="result-value">{{ confidence }}%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ confidence }}%"></div>
+                        </div>
+                    </div>
+                    <div class="result-item full-width">
+                        <label>{{ trans.get('treatment', 'Recommended Treatment:') }}</label>
+                        <p class="treatment-text">{{ treatment }}</p>
+                    </div>
+                    
+                    {% if image_filename %}
+                    <div class="result-item full-width">
+                        <img src="{{ url_for('main.uploaded_file', filename=image_filename) }}" alt="Uploaded Image" class="result-image">
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if fertilizer_recommendation %}
+                <div class="fertilizer-rec">
+                    <h3>💡 {{ trans.get('suggested_fertilizer', 'Suggested Fertilizer') }}</h3>
+                    <p>{{ fertilizer_recommendation.get('recommendation', '') }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .prediction-page {
+        padding: 40px 0;
+        min-height: calc(100vh - 200px);
+    }
+
+    .prediction-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+        .prediction-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .upload-section, .result-section {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] .upload-section,
+    [data-theme="dark"] .result-section {
+        background: #333;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: var(--text-primary);
+    }
+
+    select, input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .file-label {
+        display: block;
+        padding: 30px;
+        background: #f0f8ff;
+        border: 2px dashed #3498db;
+        border-radius: 6px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .file-label {
+        background: #1a3a52;
+        border-color: #3498db;
+    }
+
+    .file-label:hover {
+        background: #e8f5ff;
+        border-color: #2980b9;
+    }
+
+    .image-preview {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .image-preview img {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 6px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        background: #2ecc71;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: #27ae60;
+    }
+
+    .result-card {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .result-item {
+        padding: 15px;
+        background: #f5f5f5;
+        border-radius: 6px;
+        border-left: 4px solid #2ecc71;
+    }
+
+    [data-theme="dark"] .result-item {
+        background: #2a2a2a;
+        border-left-color: #27ae60;
+    }
+
+    .result-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .result-value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2ecc71;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .disease-name {
+        color: #e74c3c;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: #ecf0f1;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+
+    [data-theme="dark"] .progress-bar {
+        background: #444;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #2ecc71;
+        transition: width 0.5s ease;
+    }
+
+    .treatment-text {
+        color: var(--text-secondary);
+        margin: 10px 0 0 0;
+        line-height: 1.6;
+    }
+
+    .result-image {
+        width: 100%;
+        max-width: 300px;
+        border-radius: 6px;
+        margin-top: 10px;
+    }
+
+    .fertilizer-rec {
+        margin-top: 20px;
+        padding: 20px;
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        border-radius: 6px;
+    }
+
+    [data-theme="dark"] .fertilizer-rec {
+        background: #664d03;
+        border-left-color: #ffc107;
+    }
+
+    .fertilizer-rec h3 {
+        margin-top: 0;
+        color: #856404;
+    }
+
+    [data-theme="dark"] .fertilizer-rec h3 {
+        color: #ffc107;
+    }
+</style>
+
+<script>
+    document.getElementById('imageInput').addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('predictionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        fetch('{{ url_for("main.predict_disease") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('.prediction-page').innerHTML = html;
+        })
+        .catch(error => alert('Error: ' + error));
+    });
+
+    // Drag and drop support
+    const fileInput = document.getElementById('imageInput');
+    const fileLabel = document.querySelector('.file-label');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        fileLabel.style.background = '#e8f5ff';
+    }
+
+    function unhighlight(e) {
+        fileLabel.style.background = '#f0f8ff';
+    }
+
+    fileLabel.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        
+        const event = new Event('change', { bubbles: true });
+        fileInput.dispatchEvent(event);
+    }
+</script>
+{% endblock %}

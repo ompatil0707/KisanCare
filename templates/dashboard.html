@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+
+{% block title %}KisanCare Dashboard - Smart Agriculture Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">🌾 {{ trans.get('welcome', 'Welcome to KisanCare') }}</h1>
+            <p class="hero-subtitle">{{ trans.get('smart_agriculture', 'Your Intelligent Agricultural Assistant Platform') }}</p>
+        </div>
+    </section>
+
+    <!-- Feature Cards Grid -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">{{ trans.get('explore_features', 'Explore Our Features') }}</h2>
+            
+            <div class="features-grid">
+                <!-- Disease Prediction Card -->
+                <div class="feature-card">
+                    <div class="card-icon">🦠</div>
+                    <h3>{{ trans.get('predict_disease', 'Disease Prediction') }}</h3>
+                    <p>Advanced AI-powered disease detection from leaf images</p>
+                    <div class="card-stats">
+                        <span class="stat">{{ features.get('diseases', 5) }} {{ trans.get('disease', 'Diseases') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.predict_disease') }}" class="card-button">
+                        {{ trans.get('get_started', 'Get Started') }} →
+                    </a>
+                </div>
+
+                <!-- Weather Advisory Card -->
+                <div class="feature-card">
+                    <div class="card-icon">🌦️</div>
+                    <h3>{{ trans.get('weather', 'Weather Advisory') }}</h3>
+                    <p>Real-time weather data with farming recommendations</p>
+                    <div class="card-stats">
+                        <span class="stat">{{ trans.get('real_time', 'Real-time') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.weather') }}" class="card-button">
+                        {{ trans.get('check_weather', 'Check Weather') }} →
+                    </a>
+                </div>
+
+                <!-- Crop Recommendation Card -->
+                <div class="feature-card">
+                    <div class="card-icon">🌱</div>
+                    <h3>{{ trans.get('crop_recommendation', 'Crop Recommendation') }}</h3>
+                    <p>Suggest suitable crops based on soil and climate</p>
+                    <div class="card-stats">
+                        <span class="stat">{{ features.get('crops', 5) }} {{ trans.get('crop', 'Crops') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.crop_recommendation') }}" class="card-button">
+                        {{ trans.get('recommend_crops', 'Recommend Crops') }} →
+                    </a>
+                </div>
+
+                <!-- Fertilizer Card -->
+                <div class="feature-card">
+                    <div class="card-icon">🧪</div>
+                    <h3>{{ trans.get('fertilizer', 'Fertilizer Suggestion') }}</h3>
+                    <p>Organic and chemical fertilizer recommendations</p>
+                    <div class="card-stats">
+                        <span class="stat">{{ trans.get('npk_balanced', 'NPK Balanced') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.fertilizer') }}" class="card-button">
+                        {{ trans.get('get_recommendations', 'Get Recommendations') }} →
+                    </a>
+                </div>
+
+                <!-- Government Schemes Card -->
+                <div class="feature-card">
+                    <div class="card-icon">🏛️</div>
+                    <h3>{{ trans.get('schemes', 'Government Schemes') }}</h3>
+                    <p>Information about agricultural subsidies and schemes</p>
+                    <div class="card-stats">
+                        <span class="stat">{{ features.get('schemes', 5) }} {{ trans.get('schemes', 'Schemes') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.schemes') }}" class="card-button">
+                        {{ trans.get('explore_schemes', 'Explore Schemes') }} →
+                    </a>
+                </div>
+
+                <!-- Market Prices Card -->
+                <div class="feature-card">
+                    <div class="card-icon">📊</div>
+                    <h3>{{ trans.get('market_prices', 'Market Prices') }}</h3>
+                    <p>Latest Mandi rates for agricultural commodities</p>
+                    <div class="card-stats">
+                        <span class="stat">{{ features.get('market_prices', 5) }} {{ trans.get('crop', 'Crops') }}</span>
+                    </div>
+                    <a href="{{ url_for('main.market_prices') }}" class="card-button">
+                        {{ trans.get('check_prices', 'Check Prices') }} →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3 class="stat-number">28+</h3>
+                    <p class="stat-label">{{ trans.get('diseases_detected', 'Diseases Detected') }}</p>
+                </div>
+                <div class="stat-box">
+                    <h3 class="stat-number">5</h3>
+                    <p class="stat-label">{{ trans.get('crop', 'Crops Supported') }}</p>
+                </div>
+                <div class="stat-box">
+                    <h3 class="stat-number">3</h3>
+                    <p class="stat-label">{{ trans.get('languages', 'Languages') }}</p>
+                </div>
+                <div class="stat-box">
+                    <h3 class="stat-number">99%</h3>
+                    <p class="stat-label">{{ trans.get('accuracy', 'Model Accuracy') }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">{{ trans.get('how_it_works', 'How It Works') }}</h2>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>{{ trans.get('select_feature', 'Select Feature') }}</h3>
+                    <p>Choose one of our agricultural tools to get started</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>{{ trans.get('provide_input', 'Provide Input') }}</h3>
+                    <p>Upload image or enter farming details and conditions</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>{{ trans.get('get_analysis', 'Get Analysis') }}</h3>
+                    <p>Receive AI-powered recommendations and insights</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>{{ trans.get('apply_suggestions', 'Apply Suggestions') }}</h3>
+                    <p>Implement recommendations for better crop health</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>{{ trans.get('ready_to_start', 'Ready to Improve Your Farming?') }}</h2>
+                <p>Start using KisanCare today and make data-driven agricultural decisions.</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('main.predict_disease') }}" class="cta-button primary">
+                        {{ trans.get('upload_image', 'Upload Leaf Image') }}
+                    </a>
+                    <a href="{{ url_for('main.crop_recommendation') }}" class="cta-button secondary">
+                        {{ trans.get('get_recommendations', 'Get Recommendations') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Highlight -->
+    <section class="features-highlight">
+        <div class="container">
+            <div class="highlight-grid">
+                <div class="highlight-item">
+                    <div class="highlight-icon">🔒</div>
+                    <h4>{{ trans.get('secure', 'Secure & Private') }}</h4>
+                    <p>Your data is safe with us. No external sharing.</p>
+                </div>
+                
+                <div class="highlight-item">
+                    <div class="highlight-icon">📱</div>
+                    <h4>{{ trans.get('mobile_friendly', 'Mobile Friendly') }}</h4>
+                    <p>Works seamlessly on all devices and screen sizes.</p>
+                </div>
+                
+                <div class="highlight-item">
+                    <div class="highlight-icon">🌍</div>
+                    <h4>{{ trans.get('multilingual', 'Multilingual Support') }}</h4>
+                    <p>Available in English, Hindi, and Marathi languages.</p>
+                </div>
+                
+                <div class="highlight-item">
+                    <div class="highlight-icon">⚡</div>
+                    <h4>{{ trans.get('fast_reliable', 'Fast & Reliable') }}</h4>
+                    <p>Quick analysis with highly accurate predictions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    :root {
+        --primary-color: #2ecc71;
+        --secondary-color: #3498db;
+        --danger-color: #e74c3c;
+        --dark-bg: #1a1a1a;
+        --light-bg: #f8f9fa;
+        --text-primary: #333;
+        --text-secondary: #666;
+        --border-color: #ddd;
+    }
+
+    [data-theme="dark"] {
+        --text-primary: #fff;
+        --text-secondary: #aaa;
+        --light-bg: #2a2a2a;
+        --border-color: #444;
+    }
+
+    .dashboard {
+        padding: 0;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .features-section {
+        padding: 60px 20px;
+        background-color: var(--light-bg);
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 40px;
+        color: var(--text-primary);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: none;
+    }
+
+    [data-theme="dark"] .feature-card {
+        background: #333;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
+    }
+
+    .card-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+        color: var(--text-primary);
+        margin-bottom: 12px;
+        font-size: 1.3rem;
+    }
+
+    .feature-card p {
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    .card-stats {
+        margin-bottom: 20px;
+    }
+
+    .stat {
+        display: inline-block;
+        background: #e8f8f5;
+        color: #27ae60;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+
+    [data-theme="dark"] .stat {
+        background: #1e5631;
+        color: #2ecc71;
+    }
+
+    .card-button {
+        display: inline-block;
+        background: #2ecc71;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background 0.3s ease;
+        font-weight: bold;
+    }
+
+    .card-button:hover {
+        background: #27ae60;
+    }
+
+    .stats-section {
+        background: #2ecc71;
+        color: white;
+        padding: 60px 20px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .stat-box {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .how-it-works {
+        padding: 60px 20px;
+        background: var(--light-bg);
+    }
+
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .step-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        position: relative;
+    }
+
+    [data-theme="dark"] .step-card {
+        background: #333;
+    }
+
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: #2ecc71;
+        color: white;
+        border-radius: 50%;
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .step-card h3 {
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .step-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .cta-content h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .cta-content p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-button {
+        padding: 12px 30px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .cta-button.primary {
+        background: white;
+        color: #3498db;
+    }
+
+    .cta-button.primary:hover {
+        background: #ecf0f1;
+        transform: scale(1.05);
+    }
+
+    .cta-button.secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .cta-button.secondary:hover {
+        background: white;
+        color: #3498db;
+    }
+
+    .features-highlight {
+        padding: 60px 20px;
+        background: white;
+    }
+
+    [data-theme="dark"] .features-highlight {
+        background: #1a1a1a;
+    }
+
+    .highlight-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .highlight-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .highlight-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .highlight-item h4 {
+        color: var(--text-primary);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+
+    .highlight-item p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 1.8rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+        }
+
+        .cta-button {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Fertilizer Recommendation - KisanCare{% endblock %}
+
+{% block content %}
+<div class="fertilizer-page container">
+    <h1>🧪 {{ trans.get('fertilizer_recommendation', 'Fertilizer Recommendation') }}</h1>
+    
+    <div class="input-section">
+        <h2>{{ trans.get('select_crop', 'Select Crop') }}</h2>
+        <div class="crop-selector">
+            <select id="cropSelect" onchange="getFertilizerRec()">
+                <option value="wheat">{{ trans.get('wheat', 'Wheat') }}</option>
+                <option value="rice">{{ trans.get('rice', 'Rice') }}</option>
+                <option value="banana">{{ trans.get('banana', 'Banana') }}</option>
+                <option value="corn">{{ trans.get('corn', 'Corn') }}</option>
+                <option value="cotton">{{ trans.get('cotton', 'Cotton') }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="fertiResult" style="display:none;">
+        <div class="fert-grid">
+            <div class="fert-section">
+                <h3>🌿 {{ trans.get('organic', 'Organic Fertilizers') }}</h3>
+                <div id="organicList"></div>
+            </div>
+            
+            <div class="fert-section">
+                <h3>🧬 {{ trans.get('chemical', 'Chemical Fertilizers') }}</h3>
+                <div id="chemicalList"></div>
+            </div>
+        </div>
+
+        <div class="npk-section">
+            <h3>NPK {{ trans.get('ratio', 'Ratio') }}</h3>
+            <div id="npkInfo"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fertilizer-page { padding: 40px 0; }
+    
+    .input-section {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin: 30px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        color: #333;
+    }
+
+    [data-theme="dark"] .input-section,
+    body.dark-theme .input-section {
+        background: #333;
+        color: #e0e0e0;
+    }
+
+    .crop-selector select {
+        width: 100%;
+        max-width: 400px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        margin-top: 15px;
+        background: white;
+        color: #333;
+    }
+
+    [data-theme="dark"] .crop-selector select,
+    body.dark-theme .crop-selector select {
+        background: #444;
+        color: #e0e0e0;
+        border-color: #555;
+    }
+
+    .fert-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+        .fert-grid { grid-template-columns: 1fr; }
+    }
+
+    .fert-section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        color: #333;
+    }
+
+    [data-theme="dark"] .fert-section,
+    body.dark-theme .fert-section {
+        background: #333;
+        color: #e0e0e0;
+    }
+
+    .fert-section h3 { margin-top: 0; color: #2ecc71; }
+
+    .fert-item {
+        padding: 15px;
+        background: #f5f5f5;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        border-left: 3px solid #2ecc71;
+        color: #333;
+    }
+
+    [data-theme="dark"] .fert-item,
+    body.dark-theme .fert-item {
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
+
+    .fert-item strong { display: block; margin-bottom: 5px; }
+    
+    .fert-item small { 
+        color: #666;
+    }
+
+    [data-theme="dark"] .fert-item small,
+    body.dark-theme .fert-item small {
+        color: #999;
+    }
+
+    .npk-section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-left: 4px solid #3498db;
+        color: #333;
+    }
+
+    [data-theme="dark"] .npk-section,
+    body.dark-theme .npk-section {
+        background: #333;
+        border-left-color: #3498db;
+        color: #e0e0e0;
+    }
+
+    .npk-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .npk-item {
+        background: #e8f5ff;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+        color: #333;
+    }
+
+    [data-theme="dark"] .npk-item,
+    body.dark-theme .npk-item {
+        background: #1a3a52;
+        color: #e0e0e0;
+    }
+
+    .npk-item strong { display: block; margin-bottom: 8px; }
+    .npk-item.value { font-size: 1.3rem; font-weight: bold; color: #3498db; }
+</style>
+
+<script>
+async function getFertilizerRec() {
+    const crop = document.getElementById('cropSelect').value;
+    
+    try {
+        const response = await fetch(`{{ url_for('main.api_fertilizer', crop='CROP') }}`.replace('CROP', crop));
+        const data = await response.json();
+        
+        if (data.recommendations) {
+            let organicHtml = '';
+            data.recommendations.organic.forEach(f => {
+                organicHtml += `<div class="fert-item"><strong>${f.name}</strong><small>${f.quantity} - ${f.application}</small></div>`;
+            });
+            
+            let chemicalHtml = '';
+            data.recommendations.chemical.forEach(f => {
+                chemicalHtml += `<div class="fert-item"><strong>${f.name}</strong><small>${f.quantity} - ${f.application}</small></div>`;
+            });
+            
+            document.getElementById('organicList').innerHTML = organicHtml;
+            document.getElementById('chemicalList').innerHTML = chemicalHtml;
+            
+            if (data.npk_ratio) {
+                const npk = data.npk_ratio;
+                document.getElementById('npkInfo').innerHTML = `<div class="npk-grid">
+                    <div class="npk-item"><strong>Nitrogen (N)</strong><div class="value">${npk.nitrogen}</div></div>
+                    <div class="npk-item"><strong>Phosphorus (P)</strong><div class="value">${npk.phosphorus}</div></div>
+                    <div class="npk-item"><strong>Potassium (K)</strong><div class="value">${npk.potassium}</div></div>
+                </div>`;
+            }
+            
+            document.getElementById('fertiResult').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Load initial data
+window.addEventListener('load', getFertilizerRec);
+</script>
+{% endblock %}

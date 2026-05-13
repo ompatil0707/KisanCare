@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KisanCare - Smart Agriculture Assistant{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('main.dashboard') }}" class="logo">
+                    <span class="logo-icon">🌾</span>
+                    <span class="logo-text">KisanCare</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="{{ url_for('main.dashboard') }}" class="nav-link">{{ trans.get('home', 'Home') }}</a>
+                <a href="{{ url_for('main.predict_disease') }}" class="nav-link">{{ trans.get('predict_disease', 'Disease Prediction') }}</a>
+                <a href="{{ url_for('main.weather') }}" class="nav-link">{{ trans.get('weather', 'Weather') }}</a>
+                <a href="{{ url_for('main.crop_recommendation') }}" class="nav-link">{{ trans.get('crop_recommendation', 'Crop Recommendation') }}</a>
+                <a href="{{ url_for('main.fertilizer') }}" class="nav-link">{{ trans.get('fertilizer', 'Fertilizer') }}</a>
+                <a href="{{ url_for('main.schemes') }}" class="nav-link">{{ trans.get('schemes', 'Government Schemes') }}</a>
+                <a href="{{ url_for('main.market_prices') }}" class="nav-link">{{ trans.get('market_prices', 'Market Prices') }}</a>
+            </div>
+            
+            <div class="nav-right">
+                <!-- Language Selector -->
+                <select id="languageSelect" class="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+                    <option value="hi" {% if lang == 'hi' %}selected{% endif %}>हिंदी</option>
+                    <option value="mr" {% if lang == 'mr' %}selected{% endif %}>मराठी</option>
+                </select>
+                
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>{{ trans.get('about', 'About') }} KisanCare</h4>
+                <p>Smart agriculture assistant for Indian farmers supporting disease detection, weather updates, crop recommendations, and market prices.</p>
+            </div>
+            <div class="footer-section">
+                <h4>{{ trans.get('features', 'Features') }}</h4>
+                <ul>
+                    <li><a href="{{ url_for('main.predict_disease') }}">{{ trans.get('predict_disease', 'Disease Prediction') }}</a></li>
+                    <li><a href="{{ url_for('main.weather') }}">{{ trans.get('weather', 'Weather') }}</a></li>
+                    <li><a href="{{ url_for('main.crop_recommendation') }}">{{ trans.get('crop_recommendation', 'Crop Recommendation') }}</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>{{ trans.get('languages_supported', 'Languages Supported') }}</h4>
+                <ul>
+                    <li>English</li>
+                    <li>हिंदी (Hindi)</li>
+                    <li>मराठी (Marathi)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 KisanCare.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        // Set initial language in localStorage
+        if (localStorage.getItem('language')) {
+            document.getElementById('languageSelect').value = localStorage.getItem('language');
+        }
+        
+        function changeLanguage(lang) {
+            localStorage.setItem('language', lang);
+            const url = new URL(window.location);
+            url.searchParams.set('lang', lang);
+            window.location.href = url.toString();
+        }
+        
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon();
+        }
+        
+        function updateThemeIcon() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.getElementById('themeToggle').innerHTML = isDark ? '☀️' : '🌙';
+        }
+        
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+        
+        // Initialize theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon();
+        });
+    </script>
+</body>
+</html>
