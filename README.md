@@ -1,4 +1,3 @@
-s
 # 🌾 KisanCare - Smart Agriculture Assistant Platform
 
 A comprehensive Flask-based intelligent agriculture platform designed to help Indian farmers with crop disease detection, weather analysis, crop recommendations, fertilizer suggestions, government schemes, and market prices.
